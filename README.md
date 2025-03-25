@@ -1,2 +1,2 @@
-# LuauBridge
-LuauBridge is a bridge between native libs and luau.
+# LuauRuntime
+LuauRuntime is a bridge between native libs and luau.
