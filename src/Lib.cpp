@@ -1,5 +1,7 @@
 #include "../include/Lib.h"
 
+std::vector<HMODULE> Lib::LoadedLibs;
+
 Lib::Lib(HMODULE lib)
 {
 	loadedLib = lib;
@@ -9,6 +11,7 @@ void Lib::Register(lua_State* L)
 {
 	lua_newtable(L);
 	lua_pushcfunction(L, &Load, "load");
+	lua_setfield(L, -2, "load");
 	lua_setglobal(L, "lib");
 }
 

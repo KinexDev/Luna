@@ -5,21 +5,21 @@
 #include <functional>
 #include <fstream>
 #include <sstream>
-#include "Userdata.h"
-#include "Lib.h"
+#include "File.h"
 
 class LuauVM {
 public:
 	int DoString(const std::string &source, int results = 0);
 	int DoFile(const std::string filePath, int results = 0);
 	void PushGlobalFunction(const std::string &name, const lua_CFunction &function);
-	int CheckFunction(const std::string& name);
 	int Execute(int nargs = 0, int results = 0);
 	void PushFunction(const lua_CFunction& function);
 	LuauVM();
 	~LuauVM();
 	lua_State* L;
 	static void UserdataDestructor(void* userdata);
+	static int Require(lua_State* L);
+	static int System(lua_State* L);
 	static int IndexFunction(lua_State* L);
 	static int NewIndexFunction(lua_State* L);
 	static int AddFunction(lua_State* L);
