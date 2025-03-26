@@ -8,6 +8,7 @@ LuauRuntime is a standalone runtime for luau.
 - File handelling (using file table)
 - Globals for handling different OS's (`platform` returns `windows`, `linux` or `apple`)
 - Cross platform (tested on windows and ubuntu)
+- Repl (using the default luau repl)
 
 more coming soon!
 
