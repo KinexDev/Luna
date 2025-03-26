@@ -7,6 +7,7 @@ LuauRuntime is a standalone runtime for luau.
 - System commands (using system function)
 - File handelling (using file table)
 - Globals for handling different OS's (`platform` returns `windows`, `linux` or `apple`)
+
 more coming soon!
 
 # Dynamic Library Linking
