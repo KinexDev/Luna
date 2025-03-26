@@ -1,8 +1,8 @@
 #include "../include/Lib.h"
 
-std::vector<HMODULE> Lib::LoadedLibs;
+std::vector<dylib> Lib::LoadedLibs;
 
-Lib::Lib(HMODULE lib)
+Lib::Lib(dylib lib)
 {
 	loadedLib = lib;
 }
@@ -25,13 +25,23 @@ int Lib::Load(lua_State* L)
 
 	const char* library = lua_tostring(L, 1);
 
-	HMODULE loadedLib = LoadLibraryA(library);
+	dylib loadedLib = loadlib(library);
 
 	if (loadedLib == nullptr)
 	{
-		lua_pushstring(L, "failed to load library");
+		std::string msg = "failed to load library ";
+		msg += library;
+#if __linux__ || __APPLE__
+		msg += ", reason : ";
+		msg += dlerror();
+#endif
+		lua_pushstring(L, msg.c_str());
 		lua_error(L);
 	}
+
+#if __linux__ || __APPLE__
+	dlerror();
+#endif
 
 	LoadedLibs.push_back(loadedLib);
 
@@ -55,14 +65,22 @@ int Lib::Extern(lua_State* L)
 		lua_pushstring(L, "lib is null!");
 		lua_error(L);
 	}
-
+#ifdef _WIN32
 	lua_CFunction CFunction = (lua_CFunction)GetProcAddress(lib->loadedLib, function);
-	
 	if (CFunction == nullptr)
 	{
 		lua_pushstring(L, "function doesn't exist!");
 		lua_error(L);
 	}
+#elif __linux__ || __APPLE__
+	lua_CFunction CFunction = (lua_CFunction)dlsym(lib->loadedLib, function);
+	const char* error = dlerror();
+	if (error != nullptr) 
+	{
+		lua_pushstring(L, error);
+		lua_error(L);
+	}
+#endif
 
 	lua_pushcfunction(L, CFunction, function);
 	return 1;

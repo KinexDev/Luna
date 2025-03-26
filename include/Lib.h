@@ -5,13 +5,24 @@
 #include "Windows.h"
 #include "Userdata.h"
 
+#ifdef _WIN32
+#define dylib HMODULE
+#define loadlib(path) LoadLibraryA(path)
+#define closelib FreeLibrary
+#elif __linux__ || __APPLE__
+#define dylib void*
+#define loadlib(path) dlopen(path, RTLD_LAZY)
+#define closelib dlclose
+#endif
+
+
 class Lib : public Userdata {
 public:
-	Lib(HMODULE lib);
-	static std::vector<HMODULE> LoadedLibs;
+	Lib(dylib lib);
+	static std::vector<dylib> LoadedLibs;
 	static void Register(lua_State* L);
 	static int Load(lua_State* L);
 	static int Extern(lua_State* L);
 	int Index(lua_State* L) override;
-	HMODULE loadedLib;
+	dylib loadedLib;
 };

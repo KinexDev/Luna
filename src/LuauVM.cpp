@@ -2,7 +2,7 @@
 #include "../include/Lib.h"
 #include "../include/Userdata.h"
 
-int LuauVM::DoString(const std::string &source, int results)
+int LuauVM::DoString(const std::string& source, int results)
 {
 	size_t bytecodeSize = 0;
 
@@ -13,17 +13,21 @@ int LuauVM::DoString(const std::string &source, int results)
 	{
 		if (lua_pcall(L, 0, results, 0))
 		{
-			const char* error = lua_tostring(L, 1);
-			std::cout << error << "\n";
+			std::string error = std::string(lua_tostring(L, 1));
+			lua_pop(L, 1);
 			delete[] bytecode;
-			return 1;
+			throw std::runtime_error(error);
 		}
 	}
 	else
 	{
-		std::cerr << "Error loading the script, this could be due to bad syntax.";
+		size_t len;
+		const char* msg = lua_tolstring(L, -1, &len);
+
+		std::string error(msg, len);
+		lua_pop(L, 1);
 		delete[] bytecode;
-		return 1;
+		throw std::runtime_error(error);
 	}
 
 	delete[] bytecode;
@@ -76,6 +80,16 @@ LuauVM::LuauVM()
 	File::Register(L);
 	PushGlobalFunction("require", &Require);
 	PushGlobalFunction("system", &System);
+	lua_pushvalue(L, LUA_GLOBALSINDEX);
+#ifdef _WIN32
+	lua_pushstring(L, "windows");
+#elif __linux__ 
+	lua_pushstring(L, "linux");
+#elif __APPLE__
+	lua_pushstring(L, "apple");
+#endif
+	lua_setglobal(L, "platform");
+	lua_pop(L, 1);
 }
 
 LuauVM::~LuauVM()
@@ -84,7 +98,7 @@ LuauVM::~LuauVM()
 
 	for (auto lib : Lib::LoadedLibs)
 	{
-		FreeLibrary(lib);
+		closelib(lib);
 	}
 
 	Lib::LoadedLibs.clear();
