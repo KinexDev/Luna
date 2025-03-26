@@ -43,7 +43,7 @@ exists_directory: (path: string) -> boolean
 ```
 
 # Running Scripts
-to run scripts, you execute the exe and pass in the script you want to run, heres a simple batch file
+to run scripts, you execute the exe and pass in the script you want to run, heres a simple batch script
 
 ```
 LuauRuntime.exe main.luau
