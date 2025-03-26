@@ -8,7 +8,6 @@ LuauRuntime is a standalone runtime for luau.
 - File handelling (using file table)
 - Globals for handling different OS's (`platform` returns `windows`, `linux` or `apple`)
 - Cross platform (tested on windows and ubuntu)
-- Repl (using the default luau repl)
 
 more coming soon!
 
@@ -49,5 +48,5 @@ exists_directory: (path: string) -> boolean
 to run scripts, you execute the exe and pass in the script you want to run, heres a simple batch script
 
 ```
-LuauRuntime.exe main.luau
+luau.exe --run main.luau
 ```
