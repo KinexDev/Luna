@@ -6,6 +6,8 @@ LuauRuntime is a standalone runtime for luau.
 - Support for multiple scripts (using require function)
 - System commands (using system function)
 - File handelling (using file table)
+- Globals for handling different OS's (`platform` returns `windows`, `linux` or `apple`)
+- Cross platform (tested on windows and ubuntu)
 
 more coming soon!
 
@@ -43,10 +45,8 @@ exists_directory: (path: string) -> boolean
 ```
 
 # Running Scripts
-to run scripts, you execute the exe and pass in the script you want to run, heres a simple batch file
+to run scripts, you execute the exe and pass in the script you want to run, heres a simple batch script
 
 ```
-LuauRuntime.exe main.luau
+luau.exe --run main.luau
 ```
-# Platforms
-It currently only supports windows, i haven't written cross-platform code yet for the dynamic library handling, but i will work on that, i've got this up quick since im prototyping but overall i feel happy with this project, i want to work with it more definitely.
