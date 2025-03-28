@@ -35,13 +35,19 @@ example.custom_print("hello world!")
 # File handling
 the file class comes with 7 methods,
 ```luau
-read_all_text: (path: string) -> string|nil,
-write_all_text: (path: string, content: string) -> boolean,
-exists: (path: string) -> boolean,
-delete: (path: string) -> boolean,
-create_directory: (dir_path: string) -> (),
-delete_directory: (dir_path: string) -> (),
-exists_directory: (path: string) -> boolean
+    read_all_text: (path: string) -> string|nil,
+    write_all_text: (path: string, content: string) -> boolean,
+    exists: (path: string) -> boolean,
+    delete: (path: string) -> boolean,
+    create_directory: (dir_path: string) -> (),
+    delete_directory: (dir_path: string) -> (),
+    exists_directory: (path: string) -> boolean,
+    get_file_extension: (path: string) -> string,
+    copy_file: (src_path: string, dest_path: string) -> boolean,
+    move_file: (src_path: string, dest_path: string) -> boolean,
+    list_files_in_directory: (dir_path: string) -> { [number]:string },
+    copy_directory: (src_dir_path: string, dest_dir_path: string) -> boolean,
+    move_directory: (src_dir_path: string, dest_dir_path: string) -> boolean
 ```
 
 # Running Scripts
