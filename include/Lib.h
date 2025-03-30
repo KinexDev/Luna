@@ -4,6 +4,7 @@
 #include <vector>
 #include "Windows.h"
 #include "Userdata.h"
+#include <fstream>
 
 #ifdef _WIN32
 #define dylib HMODULE

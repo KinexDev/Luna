@@ -35,7 +35,19 @@ int main(int argc, char* argv[])
         
         try 
         {
+            std::ifstream file(argv[2]);
+            if (!file.good())
+            {
+                printf("script doesn't exist!");
+                return 0;
+            }
+
+            auto lastPath = std::filesystem::current_path();
+            auto relativePath = std::filesystem::path(argv[2]);
+            auto abspath = lastPath / relativePath;
+
             LuauVM vm;
+            LuauVM::directory = abspath.parent_path();
             vm.DoFile(argv[2]);
         }
         catch (std::exception& e) 

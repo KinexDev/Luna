@@ -3,6 +3,7 @@
 #include "../include/Userdata.h"
 
 std::unordered_map<std::string, std::vector<int>> LuauVM::cachedRequires;
+std::filesystem::path LuauVM::directory = std::filesystem::current_path();
 
 int LuauVM::DoString(const std::string& source, int results)
 {
@@ -120,9 +121,8 @@ int LuauVM::Require(lua_State* L)
 		filePath += ".luau";
 	}
 
-	auto lastPath = std::filesystem::current_path();
 	auto relativePath = std::filesystem::path(filePath);
-	auto abspath = lastPath / relativePath;
+	auto abspath = directory / relativePath;
 	
 	lua_settop(L, 0);
 
@@ -139,15 +139,11 @@ int LuauVM::Require(lua_State* L)
 		return lua_gettop(L);
 	}
 
-	auto absDirPath = abspath.parent_path();
-	std::filesystem::current_path(absDirPath);
-
-	std::ifstream file(filePath);
+	std::ifstream file(abspath);
 	if (!file.good())
 	{
-		printf("Was null!");
+		std::cout << abspath.string() << std::endl;
 		lua_pushnil(L);
-		std::filesystem::current_path(lastPath);
 		return 0;
 	}
 
@@ -165,7 +161,6 @@ int LuauVM::Require(lua_State* L)
 			const char* error = lua_tostring(L, 1);
 			std::cout << error << "\n";
 			delete[] bytecode;
-			std::filesystem::current_path(lastPath);
 			return 1;
 		}
 	}
@@ -173,7 +168,6 @@ int LuauVM::Require(lua_State* L)
 	{
 		std::cerr << "Error loading the script!";
 		delete[] bytecode;
-		std::filesystem::current_path(lastPath);
 		return 1;
 	}
 
@@ -192,7 +186,6 @@ int LuauVM::Require(lua_State* L)
 	}
 
 	cachedRequires[abspath.string()] = refMap;
-	std::filesystem::current_path(lastPath);
 	return lua_gettop(L);
 }
 
