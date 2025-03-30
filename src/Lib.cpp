@@ -25,7 +25,10 @@ int Lib::Load(lua_State* L)
 
 	const char* library = lua_tostring(L, 1);
 
-	dylib loadedLib = loadlib(library);
+	auto libpath = std::filesystem::path(library);
+	auto path = LuauVM::directory / libpath;
+
+	dylib loadedLib = loadlib(path.string().c_str());
 
 	if (loadedLib == nullptr)
 	{
@@ -69,7 +72,9 @@ int Lib::Extern(lua_State* L)
 	lua_CFunction CFunction = (lua_CFunction)GetProcAddress(lib->loadedLib, function);
 	if (CFunction == nullptr)
 	{
-		lua_pushstring(L, "function doesn't exist!");
+		std::string msg = "function doesn't exist! ";
+		msg += function;
+		lua_pushstring(L, msg.c_str());
 		lua_error(L);
 	}
 #elif __linux__ || __APPLE__
