@@ -24,11 +24,7 @@ int Lib::Load(lua_State* L)
 	}
 
 	const char* library = lua_tostring(L, 1);
-
-	auto libpath = std::filesystem::path(library);
-	auto path = LuauVM::directory / libpath;
-
-	dylib loadedLib = loadlib(path.string().c_str());
+	dylib loadedLib = loadlib(library);
 
 	if (loadedLib == nullptr)
 	{
