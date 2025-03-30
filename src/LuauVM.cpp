@@ -2,6 +2,8 @@
 #include "../include/Lib.h"
 #include "../include/Userdata.h"
 
+std::unordered_map<std::string, std::vector<int>> LuauVM::cachedRequires;
+
 int LuauVM::DoString(const std::string& source, int results)
 {
 	size_t bytecodeSize = 0;
@@ -74,7 +76,6 @@ void LuauVM::PushFunction(const lua_CFunction& function)
 
 LuauVM::LuauVM()
 {
-	workingDirectory = std::filesystem::current_path().string();
 	L = luaL_newstate();
 	luaL_openlibs(L);
 	Lib::Register(L);
@@ -121,29 +122,39 @@ int LuauVM::Require(lua_State* L)
 
 	auto lastPath = std::filesystem::current_path();
 	auto relativePath = std::filesystem::path(filePath);
-
 	auto abspath = lastPath / relativePath;
 	
-	auto absDirPath = abspath.parent_path();
+	lua_settop(L, 0);
 
+	if (cachedRequires.find(abspath.string()) != cachedRequires.end())
+	{
+		auto refVector = cachedRequires[abspath.string()];
+
+		for (int ref : refVector)
+		{
+			lua_getref(L, ref);
+			lua_pushvalue(L, -1);
+		}
+
+		return lua_gettop(L);
+	}
+
+	auto absDirPath = abspath.parent_path();
 	std::filesystem::current_path(absDirPath);
 
-	lua_settop(L, 0);
 	std::ifstream file(filePath);
-	
 	if (!file.good())
 	{
 		printf("Was null!");
 		lua_pushnil(L);
+		std::filesystem::current_path(lastPath);
 		return 0;
 	}
 
 	std::stringstream buffer;
 	buffer << file.rdbuf();
 	std::string scriptContent = buffer.str();
-
 	size_t bytecodeSize = 0;
-
 	const char* sourceCstr = scriptContent.c_str();
 	char* bytecode = luau_compile(sourceCstr, strlen(sourceCstr), nullptr, &bytecodeSize);
 
@@ -154,6 +165,7 @@ int LuauVM::Require(lua_State* L)
 			const char* error = lua_tostring(L, 1);
 			std::cout << error << "\n";
 			delete[] bytecode;
+			std::filesystem::current_path(lastPath);
 			return 1;
 		}
 	}
@@ -161,10 +173,25 @@ int LuauVM::Require(lua_State* L)
 	{
 		std::cerr << "Error loading the script!";
 		delete[] bytecode;
+		std::filesystem::current_path(lastPath);
 		return 1;
 	}
 
 	delete[] bytecode;
+
+	int numResults = lua_gettop(L);
+
+	lua_newtable(L);
+
+	// ran out of ideas ;(
+	std::vector<int> refMap;
+	for (int i = 1; i < lua_gettop(L); i++)
+	{
+		int ref = lua_ref(L, i);
+		refMap.push_back(ref);
+	}
+
+	cachedRequires[abspath.string()] = refMap;
 	std::filesystem::current_path(lastPath);
 	return lua_gettop(L);
 }

@@ -14,9 +14,9 @@ public:
 	void PushGlobalFunction(const std::string &name, const lua_CFunction &function);
 	int Execute(int nargs = 0, int results = 0);
 	void PushFunction(const lua_CFunction& function);
-	std::string workingDirectory;
 	LuauVM();
 	~LuauVM();
+	static std::unordered_map<std::string, std::vector<int>> cachedRequires;
 	lua_State* L;
 	static void UserdataDestructor(void* userdata);
 	static int Require(lua_State* L);
