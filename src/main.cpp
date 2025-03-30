@@ -5,6 +5,7 @@ void help()
     printf("Usage: luau.exe [options]\n");
     printf("Options:\n");
     printf("    --run <script>      Runs the specified Luau script.\n");
+    printf("    --compile <script>  Compiles the specified script to bytecode.\n");
     printf("    --version           Show version information.\n");
     printf("    --help              Shows this message.\n");
 }
@@ -54,6 +55,10 @@ int main(int argc, char* argv[])
     {
         help();
         return 0;
+    }
+    else if (strcmp(argv[1], "--compile") == 0)
+    {
+
     }
 
     help();

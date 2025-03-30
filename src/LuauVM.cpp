@@ -74,6 +74,7 @@ void LuauVM::PushFunction(const lua_CFunction& function)
 
 LuauVM::LuauVM()
 {
+	workingDirectory = std::filesystem::current_path().string();
 	L = luaL_newstate();
 	luaL_openlibs(L);
 	Lib::Register(L);
@@ -113,16 +114,26 @@ void LuauVM::UserdataDestructor(void* userdata)
 int LuauVM::Require(lua_State* L)
 {
 	std::string filePath = std::string(lua_tostring(L, 1));
-	
+
 	if (filePath.find(".luau") == std::string::npos) {
 		filePath += ".luau";
 	}
+
+	auto lastPath = std::filesystem::current_path();
+	auto relativePath = std::filesystem::path(filePath);
+
+	auto abspath = lastPath / relativePath;
+	
+	auto absDirPath = abspath.parent_path();
+
+	std::filesystem::current_path(absDirPath);
 
 	lua_settop(L, 0);
 	std::ifstream file(filePath);
 	
 	if (!file.good())
 	{
+		printf("Was null!");
 		lua_pushnil(L);
 		return 0;
 	}
@@ -154,7 +165,7 @@ int LuauVM::Require(lua_State* L)
 	}
 
 	delete[] bytecode;
-
+	std::filesystem::current_path(lastPath);
 	return lua_gettop(L);
 }
 

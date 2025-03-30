@@ -14,6 +14,7 @@ public:
 	void PushGlobalFunction(const std::string &name, const lua_CFunction &function);
 	int Execute(int nargs = 0, int results = 0);
 	void PushFunction(const lua_CFunction& function);
+	std::string workingDirectory;
 	LuauVM();
 	~LuauVM();
 	lua_State* L;
