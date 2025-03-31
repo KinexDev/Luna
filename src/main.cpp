@@ -1,4 +1,8 @@
 ﻿#include "../include/main.h"
+#ifdef LUAU_COMPILE
+#include "../include/luaucode.h"
+#endif
+
 
 void help() 
 {
@@ -18,6 +22,10 @@ void version()
 
 int main(int argc, char* argv[]) 
 {
+#ifdef LUAU_COMPILE
+    return 0;
+#endif
+
     if (argc < 2) 
     {
         help();
@@ -70,7 +78,36 @@ int main(int argc, char* argv[])
     }
     else if (strcmp(argv[1], "--compile") == 0)
     {
+        std::filesystem::path filePath(argv[2]);
 
+        std::ifstream file(filePath);
+
+        if (!file.good())
+        {
+            printf("script doesn't exist!");
+            return 0;
+        }
+
+        size_t bytecodeSize = 0;
+
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        std::string source = buffer.str();
+        const char* sourceCstr = source.c_str();
+        char* bytecode = luau_compile(sourceCstr, strlen(sourceCstr), nullptr, &bytecodeSize);
+
+        std::string compiledBytecode = std::string(bytecode, bytecodeSize);
+
+        std::string compiledPath = filePath.stem().string() + ".luauc";
+        std::ofstream compiledFile(compiledPath);
+
+        if (file) {
+            compiledFile << compiledBytecode;
+            std::cout << "successfully compiled to bytecode!";
+        }
+
+        delete[] bytecode;
+        return 0;
     }
 
     help();
