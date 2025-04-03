@@ -1,5 +1,5 @@
 # LuauRuntime
-LuauRuntime is a standalone runtime for luau.
+LuauRuntime is a prototype standalone runtime for luau.
 
 # Features
 - Dynamic library linking
