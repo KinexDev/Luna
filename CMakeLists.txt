@@ -43,3 +43,4 @@ add_executable(luau
 )
 
 target_link_libraries(luau_static PRIVATE Luau.VM Luau.Compiler)
+target_link_libraries(luau PRIVATE luau_static)
