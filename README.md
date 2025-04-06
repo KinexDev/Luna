@@ -1,13 +1,14 @@
 # LuauRuntime
-LuauRuntime is a standalone runtime for luau.
+LuauRuntime is a prototype standalone runtime for luau.
 
 # Features
 - Dynamic library linking
 - Support for multiple scripts (using require function)
-- System commands (using system function)
-- File handelling (using file table)
+- Extras for standard libraries, System commands (using system function) + File handelling
 - Globals for handling different OS's (`platform` returns `windows`, `linux` or `apple`)
 - Cross platform (tested on windows and ubuntu)
+- Bytecode Compilation
+- Building into self-contained executables
 
 more coming soon!
 
@@ -32,7 +33,7 @@ local example = require("example")
 example.custom_print("hello world!")
 ```
 
-# File handling
+# Standard Library Extras
 the file class comes with 7 methods,
 ```luau
     read_all_text: (path: string) -> string|nil,
@@ -50,9 +51,15 @@ the file class comes with 7 methods,
     move_directory: (src_dir_path: string, dest_dir_path: string) -> boolean
 ```
 
-# Running Scripts
-to run scripts, you execute the exe and pass in the script you want to run, heres a simple batch script
+the system function calls a operating system command
 
 ```
-luau.exe --run main.luau
+system("tree") -- creates an ascii tree of files
+```
+
+# Running Scripts
+to run scripts, you execute the exe and pass in the script you want to run
+
+```
+luau --run main.luau
 ```
