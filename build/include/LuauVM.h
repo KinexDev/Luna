@@ -1,11 +1,12 @@
 #pragma once
 #include "lualib.h"
-#include "luacode.h"
+#include <luacode.h>
 #include <iostream> 
 #include <functional>
 #include <fstream>
 #include <sstream>
 #include "File.h"
+#include <filesystem>
 #include <unordered_map>
 
 class LuauVM {
@@ -18,7 +19,6 @@ public:
 	void PushFunction(const lua_CFunction& function);
 	LuauVM();
 	~LuauVM();
-	static std::filesystem::path directory;
 	static std::unordered_map<std::string, std::vector<int>> cachedRequires;
 	lua_State* L;
 	static void UserdataDestructor(void* userdata);

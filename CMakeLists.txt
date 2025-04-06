@@ -1,7 +1,5 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
-option(LUAU_COMPILE "compile luau scripts to self-contained executable." OFF)
-
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
@@ -31,16 +29,17 @@ else()
     set(OBJECT_FILE "")
 endif()
 
-add_executable(luau 
+set(CMAKE_CXX_STANDARD 17)
+
+add_library(luau_static
     ${SOURCES_FILES}
     ${HEADER_FILES}
-    ${OBJECT_FILE}
 )
 
-target_link_libraries(luau PRIVATE Luau.VM Luau.Compiler)
+add_executable(luau 
+    "main.cpp"
+    ${OBJECT_FILE}
+    ${HEADER_FILES}
+)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET luau PROPERTY CXX_STANDARD 20)
-endif()
-
-set(CMAKE_CXX_STANDARD 17)
+target_link_libraries(luau_static PRIVATE Luau.VM Luau.Compiler)

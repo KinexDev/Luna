@@ -1,6 +1,7 @@
 #include "../include/LuauVM.h"
 #include "../include/Lib.h"
 #include "../include/Userdata.h"
+#include <unordered_map>
 
 std::unordered_map<std::string, std::vector<int>> LuauVM::cachedRequires;
 std::filesystem::path LuauVM::directory;
@@ -45,6 +46,30 @@ int LuauVM::DoFile(const std::string filePath, int results)
 	buffer << file.rdbuf();
 	std::string scriptContent = buffer.str();
 	return DoString(scriptContent, results);
+}
+
+int LuauVM::DoBytecode(const char* bytecode, int results)
+{
+	if (!luau_load(L, "Script", bytecode, strlen(bytecode), 0))
+	{
+		if (lua_pcall(L, 0, results, 0))
+		{
+			std::string error = std::string(lua_tostring(L, 1));
+			lua_pop(L, 1);
+			throw std::runtime_error(error);
+		}
+	}
+	else
+	{
+		size_t len;
+		const char* msg = lua_tolstring(L, -1, &len);
+
+		std::string error(msg, len);
+		lua_pop(L, 1);
+		throw std::runtime_error(error);
+	}
+
+	return 0;
 }
 
 void LuauVM::PushGlobalFunction(const std::string &name, const lua_CFunction& function)
@@ -126,7 +151,7 @@ int LuauVM::Require(lua_State* L)
 	auto relativePath = std::filesystem::path(filePath);
 	auto abspath = directory / relativePath;
 	
-	directory = abspath.parent_path();
+	directory = abspath.parent_path().string();
 	lua_settop(L, 0);
 
 	if (cachedRequires.find(abspath.string()) != cachedRequires.end())

@@ -1,8 +1,5 @@
-﻿#include "../include/main.h"
-#ifdef LUAU_COMPILE
-#include "../include/luaucode.h"
-#endif
-
+﻿#include "include/LuauVM.h"
+#include <filesystem>
 
 void help() 
 {
@@ -22,10 +19,6 @@ void version()
 
 int main(int argc, char* argv[]) 
 {
-#ifdef LUAU_COMPILE
-    return 0;
-#endif
-
     if (argc < 2) 
     {
         help();
