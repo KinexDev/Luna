@@ -6,11 +6,11 @@ LuauRuntime is a prototype standalone runtime for luau.
 - Support for multiple scripts (using require function)
 - Extras for standard libraries, System commands (using system function) + File handelling
 - Globals for handling different OS's (`platform` returns `windows`, `linux` or `apple`)
-- Cross platform (untested on linux and apple devices since i don't have the time)
 - Bytecode Compilation
-- Building into self-contained executables (in the works)
 
-more coming soon!
+# Coming soon
+- Building into self-contained executables (in the works, currently unfinished)
+- Cross platform (untested on linux and apple devices since i don't have the time)
 
 # Dynamic Library Linking
 To make a dynamic library for luauRuntime, refer to this [example](https://github.com/KinexDev/LuauRuntime-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
