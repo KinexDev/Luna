@@ -53,12 +53,12 @@ the file class comes with 7 methods,
 
 the system function calls a operating system command
 
-```
+```luau
 system("tree") -- creates an ascii tree of files
 ```
 
 # Running Scripts
-to run scripts, you execute the exe and pass in the script you want to run
+to run scripts, you execute luau and pass in the script you want to run
 
 ```
 luau --run main.luau
