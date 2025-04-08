@@ -6,9 +6,9 @@ LuauRuntime is a prototype standalone runtime for luau.
 - Support for multiple scripts (using require function)
 - Extras for standard libraries, System commands (using system function) + File handelling
 - Globals for handling different OS's (`platform` returns `windows`, `linux` or `apple`)
-- Cross platform (tested on windows and ubuntu)
+- Cross platform (untested on linux and apple devices since i don't have the time)
 - Bytecode Compilation
-- Building into self-contained executables
+- Building into self-contained executables (in the works)
 
 more coming soon!
 
