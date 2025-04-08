@@ -57,6 +57,9 @@ the system function calls a operating system command
 system("tree") -- creates an ascii tree of files
 ```
 
+# Example Project
+this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luauRuntime using raylib bindings.
+
 # Running Scripts
 to run scripts, you execute luau and pass in the script you want to run
 
