@@ -10,7 +10,7 @@ LuauRuntime is a prototype standalone runtime for luau.
 - Building into self-contained executables (compiles to bytecode and then gets bundled with the interpreter into an exe)
 
 # Coming soon
-- Cross platform (untested on linux and apple devices since i don't have the time but it should be implemented.)
+- Cross platform dynamic library support (untested on linux and apple devices since i don't have the time but it should be implemented.)
 
 # Dynamic Library Linking
 To make a dynamic library for luauRuntime, refer to this [example](https://github.com/KinexDev/LuauRuntime-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
