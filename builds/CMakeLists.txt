@@ -12,30 +12,11 @@ add_subdirectory(thirdparty/luau)
 file(GLOB_RECURSE SOURCES_FILES "src/*.cpp")
 file(GLOB_RECURSE HEADER_FILES "include/*.h")
 
-if(WIN32)
-    set(RESOURCE_FILE "${CMAKE_SOURCE_DIR}/luau.rc")
-    set(OBJECT_FILE "${CMAKE_SOURCE_DIR}/luau.o")
-
-    if(EXISTS ${RESOURCE_FILE})
-        add_custom_command(
-            OUTPUT ${OBJECT_FILE}
-            COMMAND windres ${RESOURCE_FILE} -o ${OBJECT_FILE}
-            DEPENDS ${RESOURCE_FILE}
-            COMMENT "Compiling resource file into ${OBJECT_FILE}"
-        )
-    else()
-        message(FATAL_ERROR "Resource file ${RESOURCE_FILE} not found.")
-    endif()
-else()
-    set(OBJECT_FILE "")
-endif()
-
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable("luau" 
     "main.cpp"
     ${SOURCES_FILES}
-    ${OBJECT_FILE}
     ${HEADER_FILES}
 )
 

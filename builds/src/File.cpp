@@ -91,7 +91,7 @@ int File::Delete(lua_State* L)
 int File::CreateDirectory(lua_State* L)
 {
 	const char* dirPath = lua_tostring(L, 1);
-	
+
 	try {
 		if (std::filesystem::create_directory(dirPath))
 			lua_pushboolean(L, true);
