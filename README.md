@@ -65,5 +65,5 @@ this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely writte
 to run scripts, you execute luau and pass in the script you want to run
 
 ```
-luau --run main.luau
+luau main.luau
 ```
