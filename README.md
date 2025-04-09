@@ -6,11 +6,11 @@ LuauRuntime is a prototype standalone runtime for luau.
 - Support for multiple scripts (using require function)
 - Extras for standard libraries, System commands (using system function) + File handelling
 - Globals for handling different OS's (`platform` returns `windows`, `linux` or `apple`)
-- Cross platform (tested on windows and ubuntu)
 - Bytecode Compilation
-- Building into self-contained executables
 
-more coming soon!
+# Coming soon
+- Building into self-contained executables (in the works, currently unfinished)
+- Cross platform (untested on linux and apple devices since i don't have the time)
 
 # Dynamic Library Linking
 To make a dynamic library for luauRuntime, refer to this [example](https://github.com/KinexDev/LuauRuntime-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
@@ -53,12 +53,15 @@ the file class comes with 7 methods,
 
 the system function calls a operating system command
 
-```
+```luau
 system("tree") -- creates an ascii tree of files
 ```
 
+# Example Project
+this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luauRuntime using raylib bindings.
+
 # Running Scripts
-to run scripts, you execute the exe and pass in the script you want to run
+to run scripts, you execute luau and pass in the script you want to run
 
 ```
 luau --run main.luau
