@@ -1,5 +1,6 @@
 ﻿#include "include/LuauVM.h"
 #include <filesystem>
+#include "include/HexEncoder.h"
 
 void help() 
 {
@@ -99,7 +100,7 @@ int main(int argc, char* argv[])
             std::cout << "successfully compiled to bytecode!";
         }
 
-        delete[] bytecode;
+        free(bytecode);
         return 0;
     }
 

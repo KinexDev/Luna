@@ -5,6 +5,7 @@
 
 std::unordered_map<std::string, std::vector<int>> LuauVM::cachedRequires;
 std::filesystem::path LuauVM::directory;
+std::unordered_map<std::string, std::string> LuauVM::requiredScripts;
 
 int LuauVM::DoString(const std::string& source, int results)
 {
@@ -13,13 +14,13 @@ int LuauVM::DoString(const std::string& source, int results)
 	const char* sourceCstr = source.c_str();
 	char* bytecode = luau_compile(sourceCstr, strlen(sourceCstr), nullptr, &bytecodeSize);
 
-	if (!luau_load(L, "Script", bytecode, bytecodeSize, 0))
+	if (!luau_load(L, "Main", bytecode, bytecodeSize, 0))
 	{
 		if (lua_pcall(L, 0, results, 0))
 		{
 			std::string error = std::string(lua_tostring(L, 1));
 			lua_pop(L, 1);
-			delete[] bytecode;
+			free(bytecode);
 			throw std::runtime_error(error);
 		}
 	}
@@ -30,11 +31,11 @@ int LuauVM::DoString(const std::string& source, int results)
 
 		std::string error(msg, len);
 		lua_pop(L, 1);
-		delete[] bytecode;
+		free(bytecode);
 		throw std::runtime_error(error);
 	}
 
-	delete[] bytecode;
+	free(bytecode);
 	return 0;
 }
 
@@ -50,7 +51,7 @@ int LuauVM::DoFile(const std::string filePath, int results)
 
 int LuauVM::DoBytecode(const char* bytecode, int results)
 {
-	if (!luau_load(L, "Script", bytecode, strlen(bytecode), 0))
+	if (!luau_load(L, "Main", bytecode, strlen(bytecode), 0))
 	{
 		if (lua_pcall(L, 0, results, 0))
 		{
@@ -142,22 +143,52 @@ void LuauVM::UserdataDestructor(void* userdata)
 int LuauVM::Require(lua_State* L)
 {
 	std::string filePath = std::string(lua_tostring(L, 1));
-	auto originalDirectory = directory;
+	std::string scriptContent;
 
 	if (filePath.find(".luau") == std::string::npos) {
 		filePath += ".luau";
 	}
 
-	auto relativePath = std::filesystem::path(filePath);
-	auto abspath = directory / relativePath;
-	
-	directory = abspath.parent_path().string();
-	lua_settop(L, 0);
+	auto originalDirectory = directory;
 
-	if (cachedRequires.find(abspath.string()) != cachedRequires.end())
+	std::filesystem::path fileNamePath(filePath);
+	std::string fileName = fileNamePath.filename().string();
+	std::string abspathStr = fileName;
+
+	bool exists = requiredScripts.find(fileName) != requiredScripts.end();
+
+	if (exists)
+	{
+		scriptContent = requiredScripts[fileName];
+	}
+	else
+	{
+		auto relativePath = std::filesystem::path(filePath);
+		auto abspath = directory / relativePath;
+
+		directory = abspath.parent_path().string();
+		lua_settop(L, 0);
+
+		std::ifstream file(abspath);
+		if (!file.good())
+		{
+			directory = originalDirectory;
+			std::cout << abspath.string() << std::endl;
+			lua_pushnil(L);
+			return 0;
+		}
+
+		std::stringstream buffer;
+		buffer << file.rdbuf();
+		scriptContent = buffer.str();
+
+		abspathStr = abspath.string();
+	}
+
+	if (cachedRequires.find(abspathStr) != cachedRequires.end())
 	{
 		directory = originalDirectory;
-		auto refVector = cachedRequires[abspath.string()];
+		auto refVector = cachedRequires[abspathStr];
 
 		for (int ref : refVector)
 		{
@@ -168,29 +199,18 @@ int LuauVM::Require(lua_State* L)
 		return lua_gettop(L);
 	}
 
-	std::ifstream file(abspath);
-	if (!file.good())
-	{
-		directory = originalDirectory;
-		std::cout << abspath.string() << std::endl;
-		lua_pushnil(L);
-		return 0;
-	}
-
-	std::stringstream buffer;
-	buffer << file.rdbuf();
-	std::string scriptContent = buffer.str();
 	size_t bytecodeSize = 0;
 	const char* sourceCstr = scriptContent.c_str();
+
 	char* bytecode = luau_compile(sourceCstr, strlen(sourceCstr), nullptr, &bytecodeSize);
 
-	if (!luau_load(L, "", bytecode, bytecodeSize, 0))
+	if (!luau_load(L, filePath.c_str(), bytecode, bytecodeSize, 0))
 	{
 		if (lua_pcall(L, 0, LUA_MULTRET, 0))
 		{
 			const char* error = lua_tostring(L, 1);
 			std::cout << error << "\n";
-			delete[] bytecode;
+			free(bytecode);
 			directory = originalDirectory;
 			return 1;
 		}
@@ -198,18 +218,18 @@ int LuauVM::Require(lua_State* L)
 	else
 	{
 		std::cerr << "Error loading the script!";
-		delete[] bytecode;
+		free(bytecode);
 		directory = originalDirectory;
 		return 1;
 	}
 
-	delete[] bytecode;
+	free(bytecode);
 
 	int numResults = lua_gettop(L);
 
 	lua_newtable(L);
 
-	// ran out of ideas ;(
+	// ran out of ideas ;( but it works.
 	std::vector<int> refMap;
 	for (int i = 1; i < lua_gettop(L); i++)
 	{
@@ -217,7 +237,7 @@ int LuauVM::Require(lua_State* L)
 		refMap.push_back(ref);
 	}
 
-	cachedRequires[abspath.string()] = refMap;
+	cachedRequires[abspathStr] = refMap;
 	directory = originalDirectory;
 	return lua_gettop(L);
 }

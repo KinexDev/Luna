@@ -1,5 +1,7 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
+option(LUAU_BUILD_CONSOLE "Build Console" OFF)
+
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
@@ -31,16 +33,11 @@ endif()
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(luau_static
-    ${SOURCES_FILES}
-    ${HEADER_FILES}
-)
-
 add_executable(luau 
     "main.cpp"
+    ${SOURCES_FILES}
     ${OBJECT_FILE}
     ${HEADER_FILES}
 )
 
-target_link_libraries(luau_static PRIVATE Luau.VM Luau.Compiler)
-target_link_libraries(luau PRIVATE luau_static)
+target_link_libraries(luau PRIVATE Luau.VM Luau.Compiler)

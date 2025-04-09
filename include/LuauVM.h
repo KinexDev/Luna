@@ -20,6 +20,7 @@ public:
 	~LuauVM();
 	static std::filesystem::path directory;
 	static std::unordered_map<std::string, std::vector<int>> cachedRequires;
+	static std::unordered_map<std::string, std::string> requiredScripts;
 	lua_State* L;
 	static void UserdataDestructor(void* userdata);
 	static int Require(lua_State* L);
