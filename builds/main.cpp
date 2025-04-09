@@ -5,7 +5,7 @@
 
 int main(int argc, char* argv[]) 
 {
-	for (auto x : LuauCode::requiredScripts)
+	for (auto& x : LuauCode::requiredScripts)
 	{
 		std::filesystem::path fileNamePath(x.first);
 		std::string fileName = fileNamePath.filename().string();

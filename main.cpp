@@ -113,14 +113,12 @@ int main(int argc, char* argv[])
         lua_pushstring(vm.L, "name");
         lua_gettable(vm.L, -2);
         const char* name = lua_tostring(vm.L, -1);
-        printf("name: %s\n", name);
         
         lua_pop(vm.L, -2);
 
         lua_pushstring(vm.L, "main");
         lua_gettable(vm.L, -2);
         const char* main = lua_tostring(vm.L, -1);
-        printf("main: %s\n", main);
 
         std::filesystem::path mainPath(main);
         std::ifstream mainFile(main);
@@ -137,6 +135,44 @@ int main(int argc, char* argv[])
         std::string mainSource = mainBuffer.str();
 
         std::string mainByteCode = compile(mainSource);
+
+        lua_pop(vm.L, -2);
+
+        lua_pushstring(vm.L, "scripts");
+
+        lua_gettable(vm.L, -2);
+
+        std::unordered_map<std::string, std::string> bytecode;
+
+        if (lua_istable(vm.L, -1) == 1) 
+        {
+            lua_pushnil(vm.L);
+
+            while (lua_next(vm.L, -2) != 0) 
+            {
+                if (lua_isstring(vm.L, -1)) 
+                {
+                    const char* script = lua_tostring(vm.L, -1);
+
+                    std::ifstream scriptFile(script);
+
+                    if (!scriptFile.good())
+                    {
+                        printf("script doesn't exist!");
+                        return 0;
+                    }
+
+                    std::stringstream scriptBuffer;
+                    scriptBuffer << scriptFile.rdbuf();
+
+                    std::string scriptSource = scriptBuffer.str();
+                    std::string scriptByteCode = compile(scriptSource);
+                    bytecode[script] = scriptByteCode;
+                }
+
+                lua_pop(vm.L, 1);
+            }
+        }
 
         std::filesystem::path exePath(argv[0]);
         std::filesystem::path exeDir = exePath.parent_path();
@@ -164,6 +200,8 @@ int main(int argc, char* argv[])
             std::filesystem::copy(buildDir.string(), tempPath, std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
         }
 
+        auto previousWorkingDirectory = std::filesystem::current_path();
+
         std::filesystem::current_path(tempPath);
 
         std::filesystem::path codePath = tempPath / "luaucode.h";
@@ -174,10 +212,21 @@ int main(int argc, char* argv[])
             "#include \"iostream\" \n"
             "namespace LuauCode { \n"
             "    std::vector<unsigned char> main = {" + HexEncoder::EncodeToHex(mainByteCode) + "}; \n"
-            "    std::unordered_map<std::string, std::vector<unsigned char>> requiredScripts = {}; \n";
+            "    std::unordered_map<std::string, std::vector<unsigned char>> requiredScripts = { \n";
+
+        for (auto& x : bytecode)
+        {
+            code += "{ \"" + x.first + "\", {" + HexEncoder::EncodeToHex(x.second) + "} }, ";
+        }
+
+        code[code.size() - 2] = '}';
+        code[code.size() - 1] = ';';
+        code += "\n";
+
         code += "}";
         codeFile << code;
         codeFile.close();
+
 
         printf("made changes to luaucode\n");
 
@@ -225,6 +274,42 @@ int main(int argc, char* argv[])
 
         //move exe to accessible area.
         std::filesystem::rename(executablePath, executableDestPath);
+
+        printf("moving dependencies! \n");
+
+        lua_pop(vm.L, -2);
+
+        lua_pushstring(vm.L, "dependencies");
+
+        lua_gettable(vm.L, -2);
+
+        std::filesystem::current_path(previousWorkingDirectory);
+
+        if (lua_istable(vm.L, -1) == 1)
+        {
+            lua_pushnil(vm.L);
+
+            while (lua_next(vm.L, -2) != 0)
+            {
+                if (lua_isstring(vm.L, -1))
+                {
+                    const char* path = lua_tostring(vm.L, -1);
+
+                    std::filesystem::path dependecyPath(path);
+                    if (!std::filesystem::exists(dependecyPath))
+                    {
+                        printf("script doesn't exist!");
+                        return 0;
+                    }
+
+                    auto newPath = outPath / std::filesystem::relative(dependecyPath, previousWorkingDirectory);
+
+                    std::filesystem::copy(dependecyPath, newPath, std::filesystem::copy_options::overwrite_existing);
+                }
+
+                lua_pop(vm.L, 1);
+            }
+        }
 
         printf("finished! \n");
 

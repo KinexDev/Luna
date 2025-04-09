@@ -156,6 +156,8 @@ int LuauVM::Require(lua_State* L)
 	std::string abspathStr = fileName;
 
 	bool exists = requiredScripts.find(fileName) != requiredScripts.end();
+	
+	lua_settop(L, 0);
 
 	if (exists)
 	{
@@ -167,7 +169,6 @@ int LuauVM::Require(lua_State* L)
 		auto abspath = directory / relativePath;
 
 		directory = abspath.parent_path().string();
-		lua_settop(L, 0);
 
 		std::ifstream file(abspath);
 		if (!file.good())

@@ -73,7 +73,7 @@ int LuauVM::DoBytecode(const char* bytecode, int results)
 	return 0;
 }
 
-void LuauVM::PushGlobalFunction(const std::string &name, const lua_CFunction& function)
+void LuauVM::PushGlobalFunction(const std::string& name, const lua_CFunction& function)
 {
 	const char* nameCstr = name.c_str();
 
@@ -155,6 +155,8 @@ int LuauVM::Require(lua_State* L)
 	std::string fileName = fileNamePath.filename().string();
 	std::string abspathStr = fileName;
 
+	lua_settop(L, 0);
+
 	if (requiredScripts.find(fileName) != requiredScripts.end())
 	{
 		scriptContent = requiredScripts[fileName];
@@ -163,6 +165,20 @@ int LuauVM::Require(lua_State* L)
 	{
 		lua_pushstring(L, "Script wasn't bundled into executable?");
 		lua_error(L);
+	}
+
+	if (cachedRequires.find(abspathStr) != cachedRequires.end())
+	{
+		directory = originalDirectory;
+		auto refVector = cachedRequires[abspathStr];
+
+		for (int ref : refVector)
+		{
+			lua_getref(L, ref);
+			lua_pushvalue(L, -1);
+		}
+
+		return lua_gettop(L);
 	}
 
 	const char* sourceCstr = scriptContent.c_str();
