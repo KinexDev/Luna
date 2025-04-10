@@ -32,6 +32,7 @@ int logic()
 		system("pause");
 #endif
 	}
+	return 0;
 }
 
 #ifdef LUAU_BUILD_WIN
