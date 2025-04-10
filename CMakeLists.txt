@@ -32,6 +32,8 @@ endif()
 
 set(CMAKE_CXX_STANDARD 17)
 
+file(COPY "${CMAKE_SOURCE_DIR}/builds" DESTINATION "${CMAKE_BINARY_DIR}/")
+
 add_executable("luau" 
     "main.cpp"
     ${SOURCES_FILES}

@@ -20,15 +20,3 @@ std::string HexEncoder::EncodeToHex(const std::string& str)
 
     return oss.str();
 }
-
-std::string HexEncoder::DecodeFromHex(const int* hex, size_t len)
-{
-    std::string decodedStr;
-
-    for (size_t i = 0; i < len; ++i)
-    {
-        decodedStr += static_cast<char>(hex[i]);
-    }
-
-    return decodedStr;
-}

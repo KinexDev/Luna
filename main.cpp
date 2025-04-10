@@ -214,16 +214,18 @@ int main(int argc, char* argv[])
             "    std::vector<unsigned char> main = {" + HexEncoder::EncodeToHex(mainByteCode) + "}; \n"
             "    std::unordered_map<std::string, std::vector<unsigned char>> requiredScripts = { \n";
 
-        for (auto& x : bytecode)
-        {
-            code += "{ \"" + x.first + "\", {" + HexEncoder::EncodeToHex(x.second) + "} }, ";
+        if (!bytecode.empty()) {
+            for (auto& x : bytecode)
+            {
+                code += "{ \"" + x.first + "\", {" + HexEncoder::EncodeToHex(x.second) + "} }, ";
+            }
+
+            code[code.size() - 2] = '}';
+            code[code.size() - 1] = ';';
         }
-
-        code[code.size() - 2] = '}';
-        code[code.size() - 1] = ';';
-        code += "\n";
-
-        code += "}";
+        else {
+            code += "};\n";
+        }
         codeFile << code;
         codeFile.close();
 
@@ -269,6 +271,7 @@ int main(int argc, char* argv[])
         if (!executableFile.good())
         {
             printf("failed compiling!");
+            std::filesystem::remove(tempPath);
             return 1;
         }
 
