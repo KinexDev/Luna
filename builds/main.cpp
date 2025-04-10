@@ -2,8 +2,11 @@
 #include <filesystem>
 #include "include/HexEncoder.h"
 #include "luaucode.h"
+#ifdef LUAU_BUILD_WIN
+#include <windows.h>
+#endif
 
-int main(int argc, char* argv[]) 
+int logic()
 {
 	for (auto& x : LuauCode::requiredScripts)
 	{
@@ -16,14 +19,31 @@ int main(int argc, char* argv[])
 
 	LuauVM vm;
 
-    try
-    {
+	try
+	{
 		std::string main = HexEncoder::DecodeFromHex(LuauCode::main);
 		vm.DoBytecode(main.c_str());
-    }
-    catch (std::exception& e)
-    {
-        std::cout << e.what() << "\n";
-        system("pause");
-    }
+	}
+	catch (std::exception& e)
+	{
+		std::cout << e.what() << "\n";
+
+#ifndef LUAU_BUILD_WIN
+		system("pause");
+#endif
+	}
 }
+
+#ifdef LUAU_BUILD_WIN
+static int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+	PSTR lpCmdLine, int nCmdShow)
+{
+	logic();
+	return 0;
+}
+#else
+int main()
+{
+	logic();
+}
+#endif

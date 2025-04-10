@@ -1,5 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
+option(LUAU_BUILD_WIN "Build windows build" OFF)
 
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
@@ -21,3 +22,8 @@ add_executable("luau"
 )
 
 target_link_libraries("luau" PRIVATE Luau.VM Luau.Compiler)
+
+if(LUAU_BUILD_WIN)
+    target_compile_definitions("luau" PRIVATE LUAU_BUILD_WIN)
+    set_target_properties("luau" PROPERTIES WIN32_EXECUTABLE TRUE)
+endif()

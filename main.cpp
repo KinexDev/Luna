@@ -8,8 +8,8 @@ void help()
     printf("Options:\n");
     printf("    <script>            Runs the specified Luau script.\n");
     printf("    --compile <script>  Compiles the specified script to bytecode.\n");
-    printf("    --version           Show version information.\n");
     printf("    --build <script>    Builds a self-contained executable based on the config.\n");
+    printf("    --version           Show version information.\n");
     printf("    --help              Shows this message.\n");
 }
 
@@ -174,6 +174,19 @@ int main(int argc, char* argv[])
             }
         }
 
+        bool buildWin = false;
+
+        lua_pop(vm.L, -2);
+
+        lua_pushstring(vm.L, "buildWin");
+
+        lua_gettable(vm.L, -2);
+
+        if (lua_isboolean(vm.L, -1))
+        {
+            buildWin = lua_toboolean(vm.L, -1);
+        }
+
         std::filesystem::path exePath(argv[0]);
         std::filesystem::path exeDir = exePath.parent_path();
         std::filesystem::path buildDir = exeDir / "builds";
@@ -226,6 +239,7 @@ int main(int argc, char* argv[])
         else {
             code += "};\n";
         }
+        code += "\n}";
         codeFile << code;
         codeFile.close();
 
@@ -259,10 +273,18 @@ int main(int argc, char* argv[])
 
         if (!exists)
         {
-            system("cmake -S . -B build");
+            if (buildWin)
+            {
+                system("cmake -S . -B build -DLUAU_BUILD_WIN=ON");
+            }
+            else
+            {
+                system("cmake -S . -B build -DLUAU_BUILD_WIN=OFF");
+            }
         }
 
         system("cmake --build build --config Release");
+
 
         std::filesystem::path executablePath = tempPath / "build" / "Release" / exeName;
         std::ifstream executableFile(cmakeListsPath);
