@@ -12,6 +12,7 @@ download is [here](https://github.com/KinexDev/LuauRuntime/releases/tag/Release)
 
 # Coming soon
 - Cross platform dynamic library support (untested on linux and apple devices since i don't have the time but it should be implemented.)
+- Making it use luau static libs for VM and Compiler (so self-contained executables do not recompile luau fully.)
 
 # Issues
 - in self contained executables, scripts must not have the same name (it currently only looks for the name of the script currently) so make sure none of your scripts have the same name.
