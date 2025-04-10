@@ -37,7 +37,7 @@ example.custom_print("hello world!")
 ```
 
 # Standard Library Extras
-the file class comes with 7 methods,
+the file module comes with 14 methods,
 ```luau
     readAllText: (path: string) -> string?,
     writeAllText: (path: string, content: string) -> boolean,
