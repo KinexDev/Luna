@@ -1,5 +1,6 @@
 # LuauRuntime
 LuauRuntime is a prototype standalone runtime for luau.
+download is [here](https://github.com/KinexDev/LuauRuntime/releases/tag/Release).
 
 # Features
 - Dynamic library linking
