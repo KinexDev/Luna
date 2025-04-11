@@ -1,5 +1,8 @@
-# LuauRuntime
-LuauRuntime is a prototype standalone runtime for luau.
+# Luna
+**Note**: LuauRuntime is being rebranded to luna
+
+Luna is a prototype standalone runtime for luau.
+download is [here](https://github.com/KinexDev/luna/releases/tag/Release).
 
 # Features
 - Dynamic library linking
@@ -11,12 +14,13 @@ LuauRuntime is a prototype standalone runtime for luau.
 
 # Coming soon
 - Cross platform dynamic library support (untested on linux and apple devices since i don't have the time but it should be implemented.)
+- Making it use luau static libs for VM and Compiler (so self-contained executables do not recompile luau fully.) which should result in faster compilation.
 
 # Issues
 - in self contained executables, scripts must not have the same name (it currently only looks for the name of the script currently) so make sure none of your scripts have the same name.
 
 # Dynamic Library Linking
-To make a dynamic library for luauRuntime, refer to this [example](https://github.com/KinexDev/LuauRuntime-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
+To make a dynamic library for luna, refer to this [example](https://github.com/KinexDev/luna-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
 
 in luau we load the library, load the extern function and cast it to it's function type
 
@@ -62,11 +66,11 @@ system("tree") -- creates an ascii tree of files
 ```
 
 # Example Project
-this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luauRuntime using raylib bindings.
+this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luna using raylib bindings.
 
 # Running Scripts
 to run scripts, you execute luau and pass in the script you want to run
 
 ```
-luau main.luau
+luna main.luau
 ```
