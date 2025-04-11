@@ -1,7 +1,7 @@
 # Luna
 **Note**: LuauRuntime is being rebranded to luna
 
-Luna is a prototype standalone runtime for luau.
+Luna is a standalone runtime for luau.
 download is [here](https://github.com/KinexDev/luna/releases/tag/Release).
 
 # Features
