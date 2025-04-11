@@ -5,7 +5,6 @@
 
 std::unordered_map<std::string, std::vector<int>> LuauVM::cachedRequires;
 std::filesystem::path LuauVM::directory;
-std::unordered_map<std::string, std::string> LuauVM::requiredScripts;
 
 int LuauVM::DoString(const std::string& source, int results)
 {
@@ -155,36 +154,28 @@ int LuauVM::Require(lua_State* L)
 	std::string fileName = fileNamePath.filename().string();
 	std::string abspathStr = fileName;
 
-	bool exists = requiredScripts.find(fileName) != requiredScripts.end();
 	
 	lua_settop(L, 0);
 
-	if (exists)
+	auto relativePath = std::filesystem::path(filePath);
+	auto abspath = directory / relativePath;
+
+	directory = abspath.parent_path().string();
+
+	std::ifstream file(abspath);
+	if (!file.good())
 	{
-		scriptContent = requiredScripts[fileName];
+		directory = originalDirectory;
+		std::cout << abspath.string() << std::endl;
+		lua_pushnil(L);
+		return 0;
 	}
-	else
-	{
-		auto relativePath = std::filesystem::path(filePath);
-		auto abspath = directory / relativePath;
 
-		directory = abspath.parent_path().string();
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	scriptContent = buffer.str();
 
-		std::ifstream file(abspath);
-		if (!file.good())
-		{
-			directory = originalDirectory;
-			std::cout << abspath.string() << std::endl;
-			lua_pushnil(L);
-			return 0;
-		}
-
-		std::stringstream buffer;
-		buffer << file.rdbuf();
-		scriptContent = buffer.str();
-
-		abspathStr = abspath.string();
-	}
+	abspathStr = abspath.string();
 
 	if (cachedRequires.find(abspathStr) != cachedRequires.end())
 	{

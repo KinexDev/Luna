@@ -6,7 +6,7 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("luau")
+project ("luna")
 add_subdirectory(thirdparty/luau)
 
 file(GLOB_RECURSE SOURCES_FILES "src/*.cpp")
@@ -34,11 +34,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 file(COPY "${CMAKE_SOURCE_DIR}/builds" DESTINATION "${CMAKE_BINARY_DIR}/")
 
-add_executable("luau" 
+add_executable("luna" 
     "main.cpp"
     ${SOURCES_FILES}
     ${OBJECT_FILE}
     ${HEADER_FILES}
 )
 
-target_link_libraries("luau" PRIVATE Luau.VM Luau.Compiler)
+target_link_libraries("luna" PRIVATE Luau.VM Luau.Compiler)

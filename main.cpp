@@ -4,7 +4,7 @@
 
 void help() 
 {
-    printf("Usage: luau.exe [options]\n");
+    printf("Usage: luna.exe [options]\n");
     printf("Options:\n");
     printf("    <script>            Runs the specified Luau script.\n");
     printf("    --compile <script>  Compiles the specified script to bytecode.\n");
@@ -16,7 +16,7 @@ void help()
 void version()
 {
     printf("luau: 0.6.6\n");
-    printf("luauRuntime: 0.0.1\n");
+    printf("Luna: 0.0.1\n");
 }
 
 std::string compile(std::string& source)
