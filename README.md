@@ -20,7 +20,7 @@ download is [here](https://github.com/KinexDev/luna/releases/tag/Release).
 - in self contained executables, scripts must not have the same name (it currently only looks for the name of the script currently) so make sure none of your scripts have the same name.
 
 # Prerequisites
-- you need cmake for self-contained executables.
+- you need cmake for self-contained executables (it compiles using cmake)
 
 # Dynamic Library Linking
 To make a dynamic library for luna, refer to this [example](https://github.com/KinexDev/luna-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
