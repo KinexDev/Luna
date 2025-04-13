@@ -40,6 +40,8 @@ local example = require("example")
 example.custom_print("hello world!")
 ```
 
+a great example to see this actually being used for something is the [raylib bindings for luna](https://github.com/KinexDev/Luna-Raylib/tree/main)
+
 # Standard Library Extras
 the file module comes with 14 methods,
 ```luau
