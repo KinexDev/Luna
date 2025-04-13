@@ -69,8 +69,29 @@ system("tree") -- creates an ascii tree of files
 this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luna using raylib bindings, that is also a great example to show you how to create a project with luna.
 
 # Running Scripts
-to run scripts, you execute luau and pass in the script you want to run
+to run scripts, you run luna and pass in the script you want to run
 
 ```
 luna main.luau
+```
+
+# Building
+
+to build a project, you run luna, add the build arg and pass in the script you want to run
+
+```
+luna --build build.lua
+```
+
+this would build the project based on that build script.
+build scripts are in this structure
+
+```lua
+return {
+   name = "luau_empty", -- the name of the executable/project 
+   main = "src/main.luau", -- the starting point of the script 
+   scripts = {}, -- additional scripts to compile 
+   dependencies = {}, -- files to copy over after the build is finished 
+   buildWin = false -- if you want to build without console (also makes it windows only)
+}
 ```
