@@ -9,6 +9,7 @@ void help()
     printf("    <script>            Runs the specified Luau script.\n");
     printf("    --compile <script>  Compiles the specified script to bytecode.\n");
     printf("    --build <script>    Builds a self-contained executable based on the config.\n");
+    printf("    --project <name>    Creates a new luna project.\n");
     printf("    --version           Show version information.\n");
     printf("    --help              Shows this message.\n");
 }
@@ -50,6 +51,44 @@ int main(int argc, char* argv[])
     if (strcmp(argv[1], "--version") == 0)
     {
         version();
+        return 0;
+    }
+    else if (strcmp(argv[1], "--project") == 0)
+    {
+        std::string name = argv[2];
+
+        std::filesystem::path workingDir = std::filesystem::current_path();
+        std::filesystem::path nameDir = workingDir / name;
+        std::filesystem::path srcDir = nameDir / "src";
+        std::filesystem::path mainDir = srcDir / "main.luau";
+        std::filesystem::path buildDir = nameDir / "build.lua";
+
+        if (!std::filesystem::exists(nameDir))
+        {
+            std::filesystem::create_directory(nameDir);
+        }
+
+        if (!std::filesystem::exists(srcDir))
+        {
+            std::filesystem::create_directory(srcDir);
+        }
+
+        std::ofstream main(mainDir);
+        main << "print(\"Hello world!\")";
+        main.close();
+
+
+        std::ofstream build(buildDir);
+        build << "return {\n";
+        build << "   name = \"" + name + "\", -- the name of the executable/project \n";
+        build << "   main = \"src/main.luau\", -- the starting point of the script \n";
+        build << "   scripts = {}, -- additional scripts to compile \n";
+        build << "   dependencies = {}, -- files to copy over after the build is finished \n";
+        build << "   buildWin = false -- if you want to build without console (windows only) \n";
+        build << "}";
+        build.close();
+
+        std::cout << "Generated project " << name << "!";
         return 0;
     }
     else if (strcmp(argv[1], "--help") == 0)
