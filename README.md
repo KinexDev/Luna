@@ -95,3 +95,13 @@ return {
    buildWin = false -- if you want to build without console (also makes it windows only)
 }
 ```
+
+# Project
+
+to create a project, you run luna, add the project arg and pass the name of the project
+
+```
+luna --project example
+```
+
+this creates a folder called example with the project set up with build and main.
