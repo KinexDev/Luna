@@ -13,9 +13,6 @@ download is [here](https://github.com/KinexDev/luna/releases/tag/Release).
 # Coming soon
 - Cross platform dynamic library support (untested on linux and apple devices since i don't have the time but it should be implemented.)
 
-# Issues
-- in self contained executables, scripts must not have the same name (it currently only looks for the name of the script currently) so make sure none of your scripts have the same name.
-
 # Prerequisites
 - you need cmake for self-contained executables (it compiles using cmake)
 
