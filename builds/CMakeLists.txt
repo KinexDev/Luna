@@ -8,22 +8,29 @@ if (POLICY CMP0141)
 endif()
 
 project ("luau")
-add_subdirectory(thirdparty/luau)
 
 file(GLOB_RECURSE SOURCES_FILES "src/*.cpp")
 file(GLOB_RECURSE HEADER_FILES "include/*.h")
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable("luau" 
+add_executable(${PROJECT_NAME}
     "main.cpp"
     ${SOURCES_FILES}
     ${HEADER_FILES}
 )
 
-target_link_libraries("luau" PRIVATE Luau.VM Luau.Compiler)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    "${PROJECT_SOURCE_DIR}/libs/Luau.Compiler.lib"
+    "${PROJECT_SOURCE_DIR}/libs/Luau.VM.lib"
+    "${PROJECT_SOURCE_DIR}/libs/Luau.Ast.lib"
+)
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+    "${PROJECT_SOURCE_DIR}/include/luau"
+)
 
 if(LUAU_BUILD_WIN)
-    target_compile_definitions("luau" PRIVATE LUAU_BUILD_WIN)
-    set_target_properties("luau" PROPERTIES WIN32_EXECUTABLE TRUE)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE LUAU_BUILD_WIN)
+    set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()

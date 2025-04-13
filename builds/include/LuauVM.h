@@ -1,6 +1,9 @@
 #pragma once
+
+extern "C" {
 #include "lualib.h"
 #include "luacode.h"
+}
 #include <iostream> 
 #include <functional>
 #include <fstream>
@@ -10,10 +13,10 @@
 
 class LuauVM {
 public:
-	int DoString(const std::string &source, int results = 0);
+	int DoString(const std::string& source, int results = 0);
 	int DoFile(const std::string filePath, int results = 0);
 	int DoBytecode(const char* bytecode, int results = 0);
-	void PushGlobalFunction(const std::string &name, const lua_CFunction &function);
+	void PushGlobalFunction(const std::string& name, const lua_CFunction& function);
 	int Execute(int nargs = 0, int results = 0);
 	void PushFunction(const lua_CFunction& function);
 	LuauVM();

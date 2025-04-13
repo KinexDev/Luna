@@ -1,6 +1,9 @@
 #pragma once
+
+extern "C" {
 #include "lualib.h"
 #include "luacode.h"
+}
 #include <iostream> 
 #include <functional>
 #include <fstream>

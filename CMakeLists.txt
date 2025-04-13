@@ -7,7 +7,6 @@ if (POLICY CMP0141)
 endif()
 
 project ("luna")
-add_subdirectory(thirdparty/luau)
 
 file(GLOB_RECURSE SOURCES_FILES "src/*.cpp")
 file(GLOB_RECURSE HEADER_FILES "include/*.h")
@@ -41,4 +40,12 @@ add_executable("luna"
     ${HEADER_FILES}
 )
 
-target_link_libraries("luna" PRIVATE Luau.VM Luau.Compiler)
+target_link_libraries("luna" PRIVATE
+    "${PROJECT_SOURCE_DIR}/libs/Luau.Compiler.lib"
+    "${PROJECT_SOURCE_DIR}/libs/Luau.VM.lib"
+    "${PROJECT_SOURCE_DIR}/libs/Luau.Ast.lib"
+)
+
+target_include_directories("luna" PRIVATE
+    "${PROJECT_SOURCE_DIR}/include/luau"
+)

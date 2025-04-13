@@ -1,5 +1,7 @@
 #pragma once
+extern "C" {
 #include "lualib.h"
+}
 #include "iostream"
 #include "LuauVM.h"
 

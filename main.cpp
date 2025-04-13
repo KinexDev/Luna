@@ -15,7 +15,7 @@ void help()
 
 void version()
 {
-    printf("luau: 0.6.6\n");
+    printf("luau: 0.6.9\n");
     printf("Luna: 0.0.1\n");
 }
 
@@ -205,13 +205,13 @@ int main(int argc, char* argv[])
 
         std::filesystem::path tempPath = outPath / "temp";
 
-        bool exists = std::filesystem::exists(outPath);
-
-        if (!exists)
+        if (std::filesystem::exists(outPath))
         {
-            std::filesystem::create_directory(outPath);
-            std::filesystem::copy(buildDir.string(), tempPath, std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
+            std::filesystem::remove_all(outPath);
         }
+
+        std::filesystem::create_directory(outPath);
+        std::filesystem::copy(buildDir.string(), tempPath, std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
 
         auto previousWorkingDirectory = std::filesystem::current_path();
 
@@ -255,32 +255,29 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        if (!exists)
-        {
-            std::stringstream cmakeListsbuffer;
-            cmakeListsbuffer << cmakeListsFile.rdbuf();
-            std::string cmakeListsTxt = cmakeListsbuffer.str();
-            std::string previousCmakeLists = previousCmakeLists;
-            replaceAll(cmakeListsTxt, "\"luau\"", name);
+        std::stringstream cmakeListsbuffer;
+        cmakeListsbuffer << cmakeListsFile.rdbuf();
+        cmakeListsFile.close();
 
-            std::ofstream cmakeListsFileW(cmakeListsPath);
-            cmakeListsFileW << cmakeListsTxt;
-            cmakeListsFileW.close();
-            printf("made changes to cmakelists");
-        }
+        std::string cmakeListsTxt = cmakeListsbuffer.str();
+        std::string previousCmakeLists = previousCmakeLists;
+        replaceAll(cmakeListsTxt, "\"luau\"", name);
+
+        std::ofstream cmakeListsFileW(cmakeListsPath);
+        cmakeListsFileW << cmakeListsTxt;
+        cmakeListsFileW.close();
+
+        printf("made changes to cmakelists");
 
         printf("done! compiling project! \n");
 
-        if (!exists)
+        if (buildWin)
         {
-            if (buildWin)
-            {
-                system("cmake -S . -B build -DLUAU_BUILD_WIN=ON");
-            }
-            else
-            {
-                system("cmake -S . -B build -DLUAU_BUILD_WIN=OFF");
-            }
+            system("cmake -S . -B build -DLUAU_BUILD_WIN=ON");
+        }
+        else
+        {
+            system("cmake -S . -B build -DLUAU_BUILD_WIN=OFF");
         }
 
         system("cmake --build build --config Release");
@@ -299,6 +296,8 @@ int main(int argc, char* argv[])
 
         //move exe to accessible area.
         std::filesystem::rename(executablePath, executableDestPath);
+
+        executableFile.close();
 
         printf("moving dependencies! \n");
 
@@ -336,7 +335,10 @@ int main(int argc, char* argv[])
             }
         }
 
-        printf("finished! \n");
+        std::filesystem::remove_all(tempPath);
+
+        printf("deleted temp! \n");
+        printf("finished compilation! \n");
 
         lua_pop(vm.L, 1);
         return 0;

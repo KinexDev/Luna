@@ -6,7 +6,7 @@
 #include <windows.h>
 #endif
 
-int logic()
+void logic()
 {
 	for (auto& x : LuauCode::requiredScripts)
 	{
@@ -32,7 +32,6 @@ int logic()
 		system("pause");
 #endif
 	}
-	return 0;
 }
 
 #ifdef LUAU_BUILD_WIN
