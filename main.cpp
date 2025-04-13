@@ -16,7 +16,7 @@ void help()
 void version()
 {
     printf("luau: 0.6.9\n");
-    printf("Luna: 0.0.1\n");
+    printf("Luna: 0.0.2\n");
 }
 
 std::string compile(std::string& source)
