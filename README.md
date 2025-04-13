@@ -1,6 +1,4 @@
 # Luna
-**Note**: LuauRuntime is being rebranded to luna.
-
 Luna is a standalone runtime for luau.
 download is [here](https://github.com/KinexDev/luna/releases/tag/Release).
 
@@ -18,6 +16,9 @@ download is [here](https://github.com/KinexDev/luna/releases/tag/Release).
 
 # Issues
 - in self contained executables, scripts must not have the same name (it currently only looks for the name of the script currently) so make sure none of your scripts have the same name.
+
+# Prerequisites
+- you need cmake for self-contained executables (it compiles using cmake)
 
 # Dynamic Library Linking
 To make a dynamic library for luna, refer to this [example](https://github.com/KinexDev/luna-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
@@ -66,7 +67,7 @@ system("tree") -- creates an ascii tree of files
 ```
 
 # Example Project
-this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luna using raylib bindings.
+this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luna using raylib bindings, that is also a great example to show you how to create a project with luna.
 
 # Running Scripts
 to run scripts, you execute luau and pass in the script you want to run
