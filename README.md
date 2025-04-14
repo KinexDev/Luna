@@ -17,7 +17,7 @@ download is [here](https://github.com/KinexDev/luna/releases/tag/Release2).
 - you need cmake for self-contained executables (it compiles using cmake)
 
 # Dynamic Library Linking
-To make a dynamic library for luna, refer to this [example](https://github.com/KinexDev/luna-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
+This is an extension of the standard library, To make a dynamic library for luna, refer to this [example](https://github.com/KinexDev/luna-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
 
 in luau we load the library, load the extern function and cast it to it's function type
 
