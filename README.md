@@ -104,3 +104,5 @@ luna --project example
 ```
 
 this creates a folder called example with the project set up with build and main.
+
+Im open to any contributions to this project.
