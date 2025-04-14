@@ -10,9 +10,6 @@ download is [here](https://github.com/KinexDev/luna/releases/tag/Release2).
 - Bytecode Compilation
 - Building into self-contained executables (compiles to bytecode and then gets bundled with the interpreter into an exe)
 
-# Coming soon
-- Cross platform dynamic library support (untested on linux and apple devices since i don't have the time but it should be implemented.)
-
 # Prerequisites
 - you need cmake for self-contained executables (it compiles using cmake)
 
