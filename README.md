@@ -4,7 +4,7 @@ download is [here](https://github.com/KinexDev/luna/releases/tag/Release2).
 
 # Features
 - Dynamic library linking
-- Support for multiple scripts (using require function)
+- Support for loading modules (using require function)
 - Extras for standard libraries, System commands (using system function) + File handelling
 - Globals for handling different OS's (`platform` returns `windows`, `linux` or `apple`)
 - Bytecode Compilation
@@ -63,6 +63,8 @@ the system function calls a operating system command
 ```luau
 system("tree") -- creates an ascii tree of files
 ```
+
+Luna is still young, so it doesn't have a developed standard library yet.
 
 # Example Project
 this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luna using raylib bindings, that is also a great example to show you how to create a project with luna.
