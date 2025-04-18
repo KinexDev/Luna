@@ -71,13 +71,13 @@ return {
 ```
 
 # Project
-
 to create a project, you run luna, add the project arg and pass the name of the project
 
 ```
-luna --project example
+luna project example
 ```
 
-this creates a folder called example with the project set up with build and main.
+this creates a folder called example with the project set up with build and main and a gitignore for builds.
 
+# Contributions
 Im open to any contributions to this project.
