@@ -21,7 +21,6 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    "${PROJECT_SOURCE_DIR}/libs/Luau.Compiler.lib"
     "${PROJECT_SOURCE_DIR}/libs/Luau.VM.lib"
     "${PROJECT_SOURCE_DIR}/libs/Luau.Ast.lib"
 )
@@ -29,6 +28,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 target_include_directories(${PROJECT_NAME} PRIVATE
     "${PROJECT_SOURCE_DIR}/include/luau"
 )
+target_compile_definitions(${PROJECT_NAME} PRIVATE LUAU_IS_BUILD)
 
 if(LUAU_BUILD_WIN)
     target_compile_definitions(${PROJECT_NAME} PRIVATE LUAU_BUILD_WIN)

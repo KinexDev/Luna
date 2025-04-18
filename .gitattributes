@@ -1,0 +1,2 @@
+builds/include/luau/*.h linguist-vendored=true
+include/luau/*.h linguist-vendored=true

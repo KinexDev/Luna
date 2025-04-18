@@ -1,11 +1,4 @@
-#include "../include/Lib.h"
-
-std::vector<dylib> Lib::LoadedLibs;
-
-Lib::Lib(dylib lib)
-{
-	loadedLib = lib;
-}
+#include "../../include/std/Lib.h"
 
 void Lib::Register(lua_State* L)
 {
@@ -42,9 +35,12 @@ int Lib::Load(lua_State* L)
 	dlerror();
 #endif
 
-	LoadedLibs.push_back(loadedLib);
-
-	PUSH_USERDATA(L, Lib, loadedLib);
+	Loaded::AddLib(L, library, loadedLib);
+	lua_pushlightuserdata(L, loadedLib);
+	lua_newtable(L);
+	lua_pushcfunction(L, &Index, "index");
+	lua_setfield(L, -2, "__index");
+	lua_setmetatable(L, -2);
 	return 1;
 }
 
@@ -56,7 +52,7 @@ int Lib::Extern(lua_State* L)
 		lua_error(L);
 	}
 
-	Lib* lib = (Lib*)lua_touserdata(L, 1);
+	dylib lib = (dylib)lua_touserdata(L, 1);
 	const char* function = lua_tostring(L, 2);
 
 	if (lib == nullptr)
@@ -65,7 +61,7 @@ int Lib::Extern(lua_State* L)
 		lua_error(L);
 	}
 #ifdef _WIN32
-	lua_CFunction CFunction = (lua_CFunction)GetProcAddress(lib->loadedLib, function);
+	lua_CFunction CFunction = (lua_CFunction)GetProcAddress(lib, function);
 	if (CFunction == nullptr)
 	{
 		std::string msg = "function doesn't exist! ";
@@ -74,7 +70,7 @@ int Lib::Extern(lua_State* L)
 		lua_error(L);
 	}
 #elif __linux__ || __APPLE__
-	lua_CFunction CFunction = (lua_CFunction)dlsym(lib->loadedLib, function);
+	lua_CFunction CFunction = (lua_CFunction)dlsym(lib, function);
 	const char* error = dlerror();
 	if (error != nullptr) 
 	{
