@@ -1,26 +1,20 @@
 # Luna
 Luna is a standalone runtime for luau.
-download is [here](https://github.com/KinexDev/luna/releases/tag/Release).
+download is [here](https://github.com/KinexDev/luna/releases/tag/Release2).
 
 # Features
 - Dynamic library linking
-- Support for multiple scripts (using require function)
+- Support for loading modules (using require function)
 - Extras for standard libraries, System commands (using system function) + File handelling
 - Globals for handling different OS's (`platform` returns `windows`, `linux` or `apple`)
 - Bytecode Compilation
 - Building into self-contained executables (compiles to bytecode and then gets bundled with the interpreter into an exe)
 
-# Coming soon
-- Cross platform dynamic library support (untested on linux and apple devices since i don't have the time but it should be implemented.)
-
-# Issues
-- in self contained executables, scripts must not have the same name (it currently only looks for the name of the script currently) so make sure none of your scripts have the same name.
-
 # Prerequisites
 - you need cmake for self-contained executables (it compiles using cmake)
 
 # Dynamic Library Linking
-To make a dynamic library for luna, refer to this [example](https://github.com/KinexDev/luna-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
+This is an extension of the standard library, To make a dynamic library for luna, refer to this [example](https://github.com/KinexDev/luna-LibExample), it has an example function called CustomPrint, this is compiled to `example.dll`.
 
 in luau we load the library, load the extern function and cast it to it's function type
 
@@ -39,6 +33,8 @@ we can then call this in other scripts.
 local example = require("example")
 example.custom_print("hello world!")
 ```
+
+a great example to see this actually being used for something is the [raylib bindings for luna](https://github.com/KinexDev/Luna-Raylib/tree/main)
 
 # Standard Library Extras
 the file module comes with 14 methods,
@@ -65,12 +61,47 @@ the system function calls a operating system command
 system("tree") -- creates an ascii tree of files
 ```
 
+Luna is still young, so it doesn't have a developed standard library yet.
+
 # Example Project
 this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luna using raylib bindings, that is also a great example to show you how to create a project with luna.
 
 # Running Scripts
-to run scripts, you execute luau and pass in the script you want to run
+to run scripts, you run luna and pass in the script you want to run
 
 ```
 luna main.luau
 ```
+
+# Building
+
+to build a project, you run luna, add the build arg and pass in the script you want to run
+
+```
+luna --build build.lua
+```
+
+this would build the project based on that build script.
+build scripts are in this structure
+
+```lua
+return {
+   name = "luau_empty", -- the name of the executable/project 
+   main = "src/main.luau", -- the starting point of the script 
+   scripts = {}, -- additional scripts to compile 
+   dependencies = {}, -- files to copy over after the build is finished 
+   buildWin = false -- if you want to build without console (also makes it windows only)
+}
+```
+
+# Project
+
+to create a project, you run luna, add the project arg and pass the name of the project
+
+```
+luna --project example
+```
+
+this creates a folder called example with the project set up with build and main.
+
+Im open to any contributions to this project.
