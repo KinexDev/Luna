@@ -36,32 +36,8 @@ example.custom_print("hello world!")
 
 a great example to see this actually being used for something is the [raylib bindings for luna](https://github.com/KinexDev/Luna-Raylib/tree/main)
 
-# Standard Library Extras
-the file module comes with 14 methods,
-```luau
-    readAllText: (path: string) -> string?,
-    writeAllText: (path: string, content: string) -> boolean,
-    exists: (path: string) -> boolean,
-    delete: (path: string) -> boolean,
-    createDirectory: (dir_path: string) -> (),
-    deleteDirectory: (dir_path: string) -> (),
-    existsDirectory: (path: string) -> boolean,
-    getFileExtension: (path: string) -> string?,
-    copyFile: (src_path: string, dest_path: string) -> boolean,
-    moveFile: (src_path: string, dest_path: string) -> boolean,
-    listFilesInDirectory: (dir_path: string) -> { [number]:string }?,
-    listDirectoriesInDirectory: (dir_path: string) -> { [number]:string }?,
-    copyDirectory: (src_dir_path: string, dest_dir_path: string) -> boolean,
-    moveDirectory: (src_dir_path: string, dest_dir_path: string) -> boolean
-```
-
-the system function calls a operating system command
-
-```luau
-system("tree") -- creates an ascii tree of files
-```
-
-Luna is still young, so it doesn't have a developed standard library yet.
+# Standard Library
+Luna is still young, so it doesn't have a developed standard library yet, i am developing it currently though, i only have fs implemented right now.
 
 # Example Project
 this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luna using raylib bindings, that is also a great example to show you how to create a project with luna.
