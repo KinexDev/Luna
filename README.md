@@ -46,7 +46,7 @@ this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely writte
 to run scripts, you run luna and pass in the script you want to run
 
 ```
-luna main.luau
+luna run main.luau
 ```
 
 # Building
@@ -54,7 +54,7 @@ luna main.luau
 to build a project, you run luna, add the build arg and pass in the script you want to run
 
 ```
-luna --build build.lua
+luna build build.lua
 ```
 
 this would build the project based on that build script.
@@ -66,7 +66,7 @@ return {
    main = "src/main.luau", -- the starting point of the script 
    scripts = {}, -- additional scripts to compile 
    dependencies = {}, -- files to copy over after the build is finished 
-   buildWin = false -- if you want to build without console (also makes it windows only)
+   noConsole = false -- if you want to build without console (windows only)
 }
 ```
 
