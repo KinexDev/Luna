@@ -1,6 +1,6 @@
 # Luna
 Luna is a standalone runtime for luau.
-download is [here](https://github.com/KinexDev/luna/releases/tag/Release3).
+download is [here](https://github.com/KinexDev/luna/releases/tag/Release4).
 
 # Features
 - Dynamic library linking
