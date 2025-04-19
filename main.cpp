@@ -13,7 +13,8 @@
 #include <limits.h>
 #endif
 
-std::string getExecutablePath() {
+// lowkey used chatgpt to generate this quickly
+std::string GetExecutablePath() {
     char buffer[260];
 
 #if defined(_WIN32)
