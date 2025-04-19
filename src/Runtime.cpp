@@ -1,6 +1,6 @@
 #include "../include/Runtime.h"
 #include "../include/std/Lib.h"
-#include "../include/std/Loaded.h"
+#include "../include/std/std.h"
 #include "../include/Require.h"
 
 #ifndef LUAU_IS_BUILD
@@ -71,16 +71,6 @@ int Runtime::DoBytecode(const char* bytecode, int results)
 	return 0;
 }
 
-void Runtime::PushGlobalFunction(const std::string& name, const lua_CFunction& function)
-{
-	const char* nameCstr = name.c_str();
-
-	lua_pushvalue(L, LUA_GLOBALSINDEX);
-	lua_pushcfunction(L, function, nameCstr);
-	lua_setglobal(L, nameCstr);
-	lua_pop(L, 1);
-}
-
 int Runtime::Execute(int nargs, int results)
 {
 	int res = lua_pcall(L, nargs, results, 0);
@@ -94,13 +84,18 @@ int Runtime::Execute(int nargs, int results)
 	return res;
 }
 
-Runtime::Runtime()
+Runtime::Runtime(bool useRequire)
 {
 	L = luaL_newstate();
 	luaL_openlibs(L);
-	Loaded::Load(L);
-	PushGlobalFunction("require", &Require::Require);
-	PushGlobalFunction("system", &System);
+	std::Load(L);
+	
+	if (useRequire) 
+	{
+		lua_pushcfunction(L, &Require::Require, "require");
+		lua_setglobal(L, "require");
+	}
+
 	lua_pushvalue(L, LUA_GLOBALSINDEX);
 #ifdef _WIN32
 	lua_pushstring(L, "windows");
@@ -119,12 +114,6 @@ Runtime::Runtime()
 
 Runtime::~Runtime()
 {
-	Loaded::Unload(L);
+	std::Unload(L);
 	lua_close(L);
-}
-
-int Runtime::System(lua_State* L)
-{
-	const char* command = lua_tostring(L, 1);
-	return system(command);
 }

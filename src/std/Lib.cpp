@@ -35,7 +35,7 @@ int Lib::Load(lua_State* L)
 	dlerror();
 #endif
 
-	Loaded::AddLib(L, library, loadedLib);
+	std::AddLib(L, library, loadedLib);
 	lua_pushlightuserdata(L, loadedLib);
 	lua_newtable(L);
 	lua_pushcfunction(L, &Index, "index");

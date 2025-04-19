@@ -17,10 +17,8 @@ public:
 	int DoFile(const std::string filePath, int results = 0);
 #endif
 	int DoBytecode(const char* bytecode, int results = 0);
-	void PushGlobalFunction(const std::string& name, const lua_CFunction& function);
 	int Execute(int nargs = 0, int results = 0);
-	Runtime();
+	Runtime(bool useRequire = true);
 	~Runtime();
 	lua_State* L;
-	static int System(lua_State* L);
 };

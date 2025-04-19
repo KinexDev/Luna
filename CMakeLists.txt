@@ -33,17 +33,28 @@ set(CMAKE_CXX_STANDARD 17)
 
 file(COPY "${CMAKE_SOURCE_DIR}/builds" DESTINATION "${CMAKE_BINARY_DIR}/")
 
-add_executable("luna" 
-    "main.cpp"
+add_library("luna_static" STATIC
     ${SOURCES_FILES}
-    ${OBJECT_FILE}
     ${HEADER_FILES}
 )
 
-target_link_libraries("luna" PRIVATE
+target_link_libraries("luna_static" PRIVATE
     "${PROJECT_SOURCE_DIR}/libs/Luau.Compiler.lib"
     "${PROJECT_SOURCE_DIR}/libs/Luau.VM.lib"
     "${PROJECT_SOURCE_DIR}/libs/Luau.Ast.lib"
+)
+
+target_include_directories("luna_static" PRIVATE
+    "${PROJECT_SOURCE_DIR}/include/luau"
+)
+
+add_executable("luna" 
+    "main.cpp"
+    ${OBJECT_FILE}
+)
+
+target_link_libraries("luna" PRIVATE
+    luna_static
 )
 
 target_include_directories("luna" PRIVATE

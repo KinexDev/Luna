@@ -1,6 +1,38 @@
 ﻿#include "include/Runtime.h"
 #include "include/Require.h"
 #include "include/Build.h"
+#include <string>
+
+#if defined(_WIN32)
+#include <windows.h>
+#elif defined(__APPLE__)
+#include <mach-o/dyld.h>
+#include <limits.h>
+#elif defined(__linux__)
+#include <unistd.h>
+#include <limits.h>
+#endif
+
+std::string getExecutablePath() {
+    char buffer[260];
+
+#if defined(_WIN32)
+    DWORD length = GetModuleFileNameA(NULL, buffer, 260);
+    if (length == 0 || length == 260)
+        return "";
+#elif defined(__APPLE__)
+    uint32_t size = sizeof(buffer);
+    if (_NSGetExecutablePath(buffer, &size) != 0)
+        return "";
+#elif defined(__linux__)
+    ssize_t length = readlink("/proc/self/exe", buffer, 260);
+    if (length == -1 || length == 260)
+        return "";
+    buffer[length] = '\0';
+#endif
+
+    return std::string(buffer);
+}
 
 void help() 
 {
@@ -72,7 +104,7 @@ int main(int argc, char* argv[])
     }
     else if (strcmp(argv[1], "build") == 0)
     {
-        std::string exePath = std::string(argv[0]);
+        std::string exePath = getExecutablePath();
         std::string buildPath = std::string(argv[2]);
         return Build::Build(exePath, buildPath);
     }
