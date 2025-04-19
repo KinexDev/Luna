@@ -1,6 +1,6 @@
 # Luna
 Luna is a standalone runtime for luau.
-download is [here](https://github.com/KinexDev/luna/releases/tag/Release2).
+download is [here](https://github.com/KinexDev/luna/releases/tag/Release3).
 
 # Features
 - Dynamic library linking
@@ -36,32 +36,8 @@ example.custom_print("hello world!")
 
 a great example to see this actually being used for something is the [raylib bindings for luna](https://github.com/KinexDev/Luna-Raylib/tree/main)
 
-# Standard Library Extras
-the file module comes with 14 methods,
-```luau
-    readAllText: (path: string) -> string?,
-    writeAllText: (path: string, content: string) -> boolean,
-    exists: (path: string) -> boolean,
-    delete: (path: string) -> boolean,
-    createDirectory: (dir_path: string) -> (),
-    deleteDirectory: (dir_path: string) -> (),
-    existsDirectory: (path: string) -> boolean,
-    getFileExtension: (path: string) -> string?,
-    copyFile: (src_path: string, dest_path: string) -> boolean,
-    moveFile: (src_path: string, dest_path: string) -> boolean,
-    listFilesInDirectory: (dir_path: string) -> { [number]:string }?,
-    listDirectoriesInDirectory: (dir_path: string) -> { [number]:string }?,
-    copyDirectory: (src_dir_path: string, dest_dir_path: string) -> boolean,
-    moveDirectory: (src_dir_path: string, dest_dir_path: string) -> boolean
-```
-
-the system function calls a operating system command
-
-```luau
-system("tree") -- creates an ascii tree of files
-```
-
-Luna is still young, so it doesn't have a developed standard library yet.
+# Standard Library
+Luna is still young, so it doesn't have a developed standard library yet, i am developing it currently though, i only have fs implemented right now.
 
 # Example Project
 this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely written in luau using luna using raylib bindings, that is also a great example to show you how to create a project with luna.
@@ -70,7 +46,7 @@ this is a [snake game](https://github.com/KinexDev/Luau-Snake) completely writte
 to run scripts, you run luna and pass in the script you want to run
 
 ```
-luna main.luau
+luna run main.luau
 ```
 
 # Building
@@ -78,7 +54,7 @@ luna main.luau
 to build a project, you run luna, add the build arg and pass in the script you want to run
 
 ```
-luna --build build.lua
+luna build build.lua
 ```
 
 this would build the project based on that build script.
@@ -90,18 +66,18 @@ return {
    main = "src/main.luau", -- the starting point of the script 
    scripts = {}, -- additional scripts to compile 
    dependencies = {}, -- files to copy over after the build is finished 
-   buildWin = false -- if you want to build without console (also makes it windows only)
+   noConsole = false -- if you want to build without console (windows only)
 }
 ```
 
 # Project
-
 to create a project, you run luna, add the project arg and pass the name of the project
 
 ```
-luna --project example
+luna project example
 ```
 
-this creates a folder called example with the project set up with build and main.
+this creates a folder called example with the project set up with build and main and a gitignore for builds.
 
+# Contributions
 Im open to any contributions to this project.
